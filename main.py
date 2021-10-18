@@ -10,30 +10,25 @@ def login(driver: webdriver, usuario, senha) -> None:
     var = None
     driver.get("https://www.bet365.com/#/HO/")
     driver.set_page_load_timeout(10)
-    while True:
-        try:
-            sleep(2)
-            elem = driver.find_elements(By.TAG_NAME, "div")
-            for el in elem:
-                if el.text == "Login":
-                    var = el
-                    break
-            var.click()
-            elem = driver.find_elements(By.TAG_NAME ,"input")
-            for el in elem:
-                if el.get_attribute("placeholder") == "Usuário":
-                    var = el
-                    el.send_keys(usuario)
-                    break
-            for el in elem:
-                if el.get_attribute("placeholder") == "Senha":
-                    el.send_keys(senha)
-                    break
-            elem = driver.find_element(By.CLASS_NAME ,"lms-StandardLogin_LoginButton ")
-            elem.click()
+    sleep(2)
+    elem = driver.find_elements(By.TAG_NAME, "div")
+    for el in elem:
+        if el.text == "Login":
+            var = el
             break
-        except:
-            print("Aguarde um pouco...")
+    var.click()
+    elem = driver.find_elements(By.TAG_NAME ,"input")
+    for el in elem:
+        if el.get_attribute("placeholder") == "Usuário":
+            var = el
+            el.send_keys(usuario)
+            break
+    for el in elem:
+        if el.get_attribute("placeholder") == "Senha":
+            el.send_keys(senha)
+            break
+    elem = driver.find_element(By.CLASS_NAME ,"lms-StandardLogin_LoginButton ")
+    elem.click()
    
 def to_check_loguin(driver: webdriver, user) -> bool:
     sleep(3)
