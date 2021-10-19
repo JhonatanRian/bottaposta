@@ -1,0 +1,3 @@
+prettytable
+selenium
+pyautogui
