@@ -1,6 +1,8 @@
 import pyautogui as auto
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.expected_conditions import visibility_of_element_located
 
 class Usuario:
     def __init__(self: object, usuario: str, senha: str) -> None:
@@ -25,7 +27,7 @@ class Usuario:
 
 class Bot(Usuario):
         
-    def __init__(self, usuario: str, senha: str, time: str = "final", valor: float = 1, url: str = "https://www.bet365.com/#/HO/") -> None:
+    def __init__(self, usuario: str = "usuario", senha: str = "senha", time: str = "final", valor: float = 1, url: str = "https://www.bet365.com/#/HO/") -> None:
         super().__init__(usuario, senha)
         self.__driver: webdriver.Firefox = None
         self.time: str = time
@@ -35,41 +37,36 @@ class Bot(Usuario):
     @property
     def drive(self: object) -> webdriver.Firefox:
         return self.__driver
-    
-    def time(self: object, novo_time: str) -> None:
-        self.time = novo_time
         
-    def valor(self: object, novo_valor) -> None:
-        self.valor = novo_valor
-        
-    def vezes(self: object, mudar) -> None:
-        self.vezes = mudar
+    def find(self, *locator):
+        element = WebDriverWait(self.__driver, 300).until(visibility_of_element_located(*locator))
+        return element
         
     def iniciar(self: object) -> None:
         """Abre o navegador firefox"""
         self.__driver: webdriver.Firefox = webdriver.Firefox()
+        self.__driver.delete_all_cookies()
     
     def abrir_url(self: object) -> None:
         """Abre a url do site"""
         self.__driver.get(self.url)
-        self.__driver.set_page_load_timeout(5)
     
     def clica_botao_login(self: object) -> None:
         """
         clicar no botão que leva a tela de login
         """
-        element: webdriver.Firefox = self.__driver.find_elements(By.TAG_NAME, "div")
-        for el in element:
-            if el.text == "Login":
-                botao_para_login = el
-                break
-        botao_para_login.click()
+        var = By.CLASS_NAME, "hm-MainHeaderRHSLoggedOutWide_Login "
+        self.find(var)
+        botao = self.__driver.find_element(By.CLASS_NAME, "hm-MainHeaderRHSLoggedOutWide_Login ")
+        botao.click()
     
     def escrever_dados(self: object) -> None:
         """
         Procura os inputs da tela de login e escreve os dados
         do usuario
         """
+        var = By.TAG_NAME ,"input"
+        self.find(var)
         element: webdriver.Firefox = self.__driver.find_elements(By.TAG_NAME ,"input")
         for el in element:
             if el.get_attribute("placeholder") == "Usuário":
@@ -113,11 +110,10 @@ class Bot(Usuario):
         
     def pesquisar(self: object) -> None:
         """Escreve na caixa de pesquisa o time escolhido"""
-        element: webdriver = self.__driver.find_elements(By.TAG_NAME, "div")
-        for el in element:
-            if el.get_attribute("class") == "hm-SiteSearchIconLoggedIn ":
-                el.click()
-                break
+        var = By.CLASS_NAME, "hm-SiteSearchIconLoggedIn "
+        self.find(var)
+        ele = self.__driver.find_element(By.CLASS_NAME, "hm-SiteSearchIconLoggedIn ")
+        ele.click()
         element = self.__driver.find_elements(By.TAG_NAME, "input")
         for el in element:
             if el.get_attribute("class") == "sml-SearchTextInput ":
@@ -127,6 +123,7 @@ class Bot(Usuario):
         
     def capturar_jogos(self: object) -> list:
         """Captura na tela os jogos referente a pesquisa e os retorna em uma lista de webdriver"""
+        self.__driver.set_page_load_timeout(5)
         lista_jogos = list()
         element = self.__driver.find_elements(By.TAG_NAME, "div")
         for el in element:
@@ -139,6 +136,7 @@ class Bot(Usuario):
         """- O parametro "escolha" deverá vir do usuario.
         - "escolha" será o indice que indicará o jogo escolhido
         """
+        self.__driver.set_page_load_timeout(5)
         lista_jogos = list()
         element = self.__driver.find_elements(By.TAG_NAME, "div")
         for el in element:
@@ -148,6 +146,7 @@ class Bot(Usuario):
         lista_jogos[escolha].click()
       
     def clicar_time(self: object) -> None:
+        self.__driver.set_page_load_timeout(5)
         element = self.__driver.find_elements(By.TAG_NAME, "div")
         for elem in element:
             if elem.get_attribute("class") == "gl-MarketGroup ":
@@ -156,7 +155,7 @@ class Bot(Usuario):
         lista = elemento.find_elements(By.TAG_NAME, "div")
         for l in lista:
             if l.get_attribute("class") == "gl-Participant gl-Participant_General gl-Market_General-cn3 ":
-                if "Flamengo" in l.text:
+                if self.time in l.text:
                     time_aposta = l
                     break
         time_aposta.click()
@@ -226,8 +225,8 @@ if __name__ == '__main__':
     from time import sleep
     bot = Bot("Kele51", "3122477", "Flamengo", "5")
     bot.iniciar()
-    bot.abrir_url()
     sleep(2)
+    bot.abrir_url()
     bot.clica_botao_login()
     bot.escrever_dados()
     bot.fazer_login()

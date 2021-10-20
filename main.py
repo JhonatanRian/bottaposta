@@ -37,6 +37,7 @@ def mostrar_jogos(jogos: webdriver.Firefox) -> None:
     print(x)
 
 def loguin(BOT: Bot) -> None:
+    sleep(5)
     cont = 0
     while True:
         cont += 1
@@ -44,14 +45,16 @@ def loguin(BOT: Bot) -> None:
             BOT.clica_botao_login()
             break
         except:
+            painel()
             print("\033[1;32mAguarde um pouco...\033[0;0m")
-        if cont == 7:
+        if cont == 1000:
             break
-    if cont == 7:
+    if cont == 1000:
         print("\033[1;33mAlgo deu errado, por favor tente novamente\033[0;0m")
         sleep(3)
         principal()
     cont = 0
+    sleep(4)
     while True:
         cont += 1
         try:
@@ -59,10 +62,9 @@ def loguin(BOT: Bot) -> None:
             BOT.fazer_login()
             break
         except:
-            print("\033[1;32mAguarde um pouco...\033[0;0m")
-        if cont == 4:
-            break
-    if cont == 4:
+            if cont == 300:
+                break
+    if cont == 300:
         print("\033[1;33mAlgo deu errado, por favor tente novamente\033[0;0m")
         sleep(3)
         principal()
@@ -123,7 +125,6 @@ def principal() -> None:
         principal()
     painel()
     print("\033[1;32m>>> Fazendo a pesquisa do time<<< \033[0;0m")
-    very = bot.tela_cheia()
     count = 0
     while True:
         count += 1
@@ -134,7 +135,7 @@ def principal() -> None:
             break
         except:
             ...
-        if count == 3:
+        if count == 2:
             break
     count = 0
     while True:
@@ -144,45 +145,90 @@ def principal() -> None:
             break
         except:
             ...
-        if count == 3:
+        if count == 300:
             break
+    if count == 300:
+        print("\033[1;33mAlgo deu errado, por favor tente novamente\033[0;0m")
+        sleep(3)
+        principal()
+    print("\033[1;32mPesquisa feita\033[0;0m")
     sleep(1)
     jogos = bot.capturar_jogos()
     painel()
     print("\033[1;32mTabela de opções de jogos, digit o valor que quer escolher\033[0;0m\033[1;33m")
     mostrar_jogos(jogos)
     op = int(input(">>> \033[0;0m"))
-    sleep(2)
+    sleep(3)
     if vezes > 1:
         for i in range(0, vezes+1):
             if i == 0:
+                sleep(2)
                 bot.clicar_jogo(op)
-                sleep(2)
-                bot.clicar_time()
-                sleep(2)
+                sleep(3)
+                cont = 0
+                while True:
+                    cont += 1
+                    try:
+                        bot.clicar_time()
+                        break
+                    except:
+                        if cont == 300:
+                            print("\033[1;33mAlgo deu errado, por favor tente novamente\033[0;0m")
+                            sleep(3)
+                            principal()
+                sleep(3)
                 bot.escrever_valor_aposta()
                 bot.apostar()
-                sleep(2)
+                sleep(3)
                 bot.concluir_aposta()
-                sleep(2)
+                sleep(3)
                 bot.minhas_apostas()
-                sleep(2)
-                bot.encerra_aposta()
-                sleep(2)
+                sleep(3)
+                while True:
+                    cont += 1
+                    try:
+                        bot.encerra_aposta()
+                        break
+                    except:
+                        if cont == 1000:
+                            print("\033[1;33mAlgo deu errado, por favor tente novamente\033[0;0m")
+                            sleep(3)
+                            principal()
+                sleep(3)
                 bot.voltar_minhas_apostas()
             else:
-                sleep(2)
-                bot.clicar_time()
-                sleep(2)
+                sleep(3)
+                sleep(3)
+                cont = 0
+                while True:
+                    cont += 1
+                    try:
+                        bot.clicar_time()
+                        break
+                    except:
+                        if cont == 300:
+                            print("\033[1;33mAlgo deu errado, por favor tente novamente\033[0;0m")
+                            sleep(3)
+                            principal()
+                sleep(3)
                 bot.escrever_valor_aposta()
                 bot.apostar()
-                sleep(2)
+                sleep(3)
                 bot.concluir_aposta()
-                sleep(2)
+                sleep(3)
                 bot.minhas_apostas()
-                sleep(2)
-                bot.encerra_aposta()
-                sleep(2)
+                sleep(3)
+                while True:
+                    cont += 1
+                    try:
+                        bot.encerra_aposta()
+                        break
+                    except:
+                        if cont == 1000:
+                            print("\033[1;33mAlgo deu errado, por favor tente novamente\033[0;0m")
+                            sleep(3)
+                            principal()
+                sleep(3)
                 bot.voltar_minhas_apostas()
     else:
         primeiro_executar(bot, op)
